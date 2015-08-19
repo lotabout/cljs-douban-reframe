@@ -13,11 +13,17 @@
    (reaction (:channel-list @db))))
 
 (re-frame/register-sub
- :current-channel-seq-id
+ :current-channel-id
  (fn [db]
-   (reaction (:current-channel-seq-id @db))))
+   (reaction (:current-channel-id @db))))
 
 (re-frame/register-sub
  :current-song
  (fn [db]
    (reaction (:current-song @db))))
+
+;;; debug use
+(re-frame/register-sub
+ :db
+ (fn [db]
+   (reaction @db)))

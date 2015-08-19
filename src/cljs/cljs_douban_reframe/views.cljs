@@ -5,14 +5,16 @@
 
 (defn channel-list-div []
   (let [channel-list (re-frame/subscribe [:channel-list])
-        current-channel-seq-id (re-frame/subscribe [:current-channel-seq-id])]
+        current-channel-id (re-frame/subscribe [:current-channel-id])]
     (fn []
-      (let [select-id @current-channel-seq-id]
+      #_(.log js/console (str "channel list " @channel-list))
+      (let [select-id @current-channel-id
+            channels @channel-list]
         [:div
          [:ul.channel-list
-          (for [channel @channel-list]
+          (for [channel channels]
             ^{:key (channel "channel_id")}
-            [:li {:class (if (= select-id (channel "seq_id")) "selected" "")}
+            [:li {:channel-id (channel "channel_id")}
              (channel "name")])]]))))
 
 (defn song-player []
@@ -21,7 +23,7 @@
         current-song-url (reaction (and @current-song (@current-song "url")))]
     (with-meta
       (fn []
-        (.log js/console (str @current-song @current-song-url))
+        #_(.log js/console (str "Song-player render " (deref (re-frame/subscribe [:db]))))
         [:div#player
          [:p "title: " (and @current-song (@current-song "title"))]
          [:p "Like: " (str (and @current-song (@current-song "like")))]
@@ -40,7 +42,10 @@
                                  (.pause player)))}]
          [:input {:type "button"
                   :value "Rate Song"
-                  :on-click #(re-frame/dispatch [:rate-song])}]])
+                  :on-click #(re-frame/dispatch [:rate-song])}]
+         [:input {:type "button"
+                  :value "Delete Song"
+                  :on-click #(re-frame/dispatch [:delete-song])}]])
       {:component-did-mount
        (fn [this]
          (dom/listen! (sel1 :#player-audio) :ended #(re-frame/dispatch [:end-song])))})))
