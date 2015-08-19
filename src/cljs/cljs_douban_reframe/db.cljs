@@ -7,4 +7,4 @@
    :channel-list nil
    :current-channel-seq-id 0
    :song-list nil
-   :current-song nil})
+   :current-song {}})

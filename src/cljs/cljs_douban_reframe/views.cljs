@@ -20,26 +20,30 @@
     (with-meta
       (fn []
         [:div#player
-         [:p "title: " (@current-song "title")]
+         [:p "title: " (and @current-song (@current-song "title"))]
          [:audio#player-audio
           {:autoPlay "true"
            :controls "true"
-           :src (str (current-song "url"))}]
+           :src (str (and @current-song (@current-song "url")))}]
          [:input {:type "button"
                   :value "Next Song"
                   :on-click #(re-frame/dispatch [:next-song])}]
          [:input {:type "button"
                   :value "Play/Stop"
-                  :on-click #(let [player (sel1 :#player-audio)]
-                               (if (.-paused player)
-                                 (.play player)
-                                 (.pause player)))}]])
+                  :on-click #(re-frame/dispatch [:pause-song (sel1 :#player-audio)])}]])
       {:component-did-mount
        (fn [this]
          (dom/listen! (sel1 :#player-audio) :ended #(re-frame/dispatch [:end-song])))})))
 
+(defn tmp-player []
+  (let [current-song (re-frame/subscribe [:current-song])]
+    (fn []
+        [:div#player
+         [:p "title: " (@current-song "title")]]))) 
+
 (defn main-panel []
   (let [name (re-frame/subscribe [:name])]
     (fn []
-      [channel-list-div]
-      [song-player])))
+      [:div#main
+       [channel-list-div]
+       [song-player]])))
