@@ -12,4 +12,5 @@
 (defn ^:export init [] 
   (re-frame/dispatch-sync [:initialize-db])
   (re-frame/dispatch [:query-channel])
+  (re-frame/dispatch [:next-song])
   (mount-root))

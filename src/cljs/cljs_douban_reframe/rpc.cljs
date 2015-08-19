@@ -1,6 +1,8 @@
 (ns cljs-douban-reframe.rpc
   (:require [ajax.core :as ajax]
-            [re-frame.core :as re-frame]))
+            [cljs.core.async :refer [<! chan >!]]
+            [re-frame.core :as re-frame])
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn GET [url settings]
   "wrapper of ajax.core's GET method, return a channel containing response"
