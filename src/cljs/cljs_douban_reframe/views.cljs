@@ -7,7 +7,7 @@
 (defn login-form []
   (let [username (atom "")
         password (atom "")
-        login (fn [] (re-frame/dispatch [:login username password]))]
+        login (fn [] (re-frame/dispatch [:login @username @password]))]
     (fn []
       [:div.login
        [:label "Username: "]

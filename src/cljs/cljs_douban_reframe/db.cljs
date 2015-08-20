@@ -2,8 +2,9 @@
 
 (def default-db
   {:name "re-frame"
-   :username nil
-   :password nil
+   :user_id nil
+   :token nil
+   :expire nil
    :channel-list nil
    :current-channel-id 0
    :song-list nil
