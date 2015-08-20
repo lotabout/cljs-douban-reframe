@@ -1,7 +1,27 @@
 (ns cljs-douban-reframe.views
     (:require [re-frame.core :as re-frame]
-              [dommy.core :as dom :refer-macros [sel1 sel]])
+              [dommy.core :as dom :refer-macros [sel1 sel]]
+              [reagent.core :as reagent :refer [atom]])
     (:require-macros [reagent.ratom :refer [reaction]]))
+
+(defn login-form []
+  (let [username (atom "")
+        password (atom "")
+        login (fn [] (re-frame/dispatch [:login username password]))]
+    (fn []
+      [:div.login
+       [:label "Username: "]
+       [:input {:type "text"
+                :value @username
+                :on-change #(reset! username (-> % .-target .-value))}]
+
+       [:label "Password: "]
+       [:input {:type "text"
+                :value @password
+                :on-change #(reset! password (-> % .-target .-value))}]
+       [:input {:type "button"
+                :value "Login"
+                :on-click login}]])))
 
 (defn channel-list-div []
   (let [channel-list (re-frame/subscribe [:channel-list])
@@ -54,5 +74,6 @@
   (let [name (re-frame/subscribe [:name])]
     (fn []
       [:div#main
+       [login-form]
        [channel-list-div]
        [song-player]])))
